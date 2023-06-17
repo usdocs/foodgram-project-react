@@ -123,7 +123,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         instance.text = validated_data.get('text', instance.text)
         instance.cooking_time = validated_data.get(
             'cooking_time', instance.cooking_time
-            )
+        )
 
         self.create_ingredients(validated_data.pop('recipe_ingredient'),
                                 instance)
