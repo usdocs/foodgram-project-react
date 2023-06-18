@@ -13,6 +13,7 @@ class User(AbstractUser):
         },
     )
     username = models.CharField(
+        'Никнейм',
         max_length=150,
         unique=True,
         validators=[UnicodeUsernameValidator],
@@ -33,17 +34,25 @@ class User(AbstractUser):
         max_length=150,
     )
 
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.username
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='follower',
+        verbose_name='Подписчик'
     )
     following = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='following',
+        verbose_name='Автор подписки'
     )
 
     class Meta:
@@ -53,3 +62,7 @@ class Follow(models.Model):
                 name='unique_together'
             )
         ]
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.user

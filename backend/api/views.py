@@ -37,8 +37,7 @@ class RecipeViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
             return CreateRecipeSerializer
-        else:
-            return RecipeSerializer
+        return RecipeSerializer
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

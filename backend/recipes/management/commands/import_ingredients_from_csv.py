@@ -13,8 +13,13 @@ class Command(BaseCommand):
                 'recipes/data/ingredients.csv', 'r',
                 encoding='UTF-8'
         ) as ingredients:
+            ingredients_list = []
             for row in reader(ingredients):
                 if len(row) == 2:
-                    Ingredient.objects.get_or_create(
-                        name=row[0], measurement_unit=row[1],
+                    ingredients_list.append(
+                        Ingredient(
+                            name=row[0],
+                            measurement_unit=row[1],
+                        )
                     )
+            Ingredient.objects.bulk_create(ingredients_list)

@@ -142,3 +142,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Constants
 
 RECIPES_LIMIT = 1
+MIN_VALUE = 1
+MAX_VALUE = 32000

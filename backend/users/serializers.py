@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 # from api.serializers import ViewRecipeSerializer
-from users.models import Follow, User
+from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Follow.objects.filter(user=user, following=obj.id).exists()
+        return user.follower.filter(following=obj.id).exists()
 
 
 class UserCreateSerializer(serializers.ModelSerializer):

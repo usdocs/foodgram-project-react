@@ -4,8 +4,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                            RecipeTag, ShoppingCart, Tag)
+from recipes.models import Ingredient, Recipe, RecipeIngredient, RecipeTag, Tag
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -63,13 +62,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return Favorite.objects.filter(user=user, recipe=obj.id).exists()
+        return user.favorite.filter(recipe=obj.id).exists()
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return ShoppingCart.objects.filter(user=user, recipe=obj.id).exists()
+        return user.shopping_cart.filter(recipe=obj.id).exists()
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
@@ -99,21 +98,32 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                   'cooking_time')
 
     def create_ingredients(self, ingredients, recipe):
+        ingredients_list = []
         for element in ingredients:
             id = element['ingredient']['id']
             ingredient = Ingredient.objects.get(pk=id)
             amount = element['amount']
-            RecipeIngredient.objects.create(
-                ingredient=ingredient, recipe=recipe, amount=amount
+            ingredients_list.append(
+                RecipeIngredient(
+                    ingredient=ingredient,
+                    recipe=recipe,
+                    amount=amount
+                )
             )
+        RecipeIngredient.objects.bulk_create(ingredients_list)
 
     def create_tags(self, tags, recipe):
+        tags_list = []
         for element in tags:
             id = element.id
             tag = Tag.objects.get(pk=id)
-            RecipeTag.objects.create(
-                tag=tag, recipe=recipe
+            tags_list.append(
+                RecipeTag(
+                    tag=tag,
+                    recipe=recipe
+                )
             )
+        RecipeTag.objects.bulk_create(tags_list)
 
     def update(self, instance, validated_data):
         RecipeIngredient.objects.filter(recipe=instance).delete()
@@ -170,4 +180,5 @@ class UserSubscribeSerializer(UserSerializer):
         return ViewRecipeSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj).count()
+        user = obj
+        return user.recipes.all().count()

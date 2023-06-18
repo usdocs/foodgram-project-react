@@ -12,9 +12,15 @@ class Command(BaseCommand):
         with open(
                 'recipes/data/tags.csv', 'r',
                 encoding='UTF-8'
-        ) as tag:
-            for row in reader(tag):
+        ) as tags:
+            tags_list = []
+            for row in reader(tags):
                 if len(row) == 3:
-                    Tag.objects.get_or_create(
-                        name=row[0], color=row[1], slug=row[2]
+                    tags_list.append(
+                        Tag(
+                            name=row[0],
+                            color=row[1],
+                            slug=row[2]
+                        )
                     )
+            Tag.objects.bulk_create(tags_list)
