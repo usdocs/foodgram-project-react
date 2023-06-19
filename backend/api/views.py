@@ -78,21 +78,16 @@ class RecipeViewSet(ModelViewSet):
         shopping_cart_recipe = get_object_or_404(Recipe, id=pk)
         user = get_object_or_404(User, username=self.request.user.username)
         if request.method == 'DELETE':
-            try:
-                ShoppingCart.objects.get(
-                    user=user,
-                    recipe=shopping_cart_recipe
-                )
-            except Exception as error:
-                return Response(
-                    {f'Рецепт отсутствует в списке покупок: {error}'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            ShoppingCart.objects.filter(
-                user=user,
-                recipe=shopping_cart_recipe
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            shopping_cart = (
+                user.shopping_cart.filter(recipe=shopping_cart_recipe).first()
+            )
+            if shopping_cart:
+                shopping_cart.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {'Рецепт отсутствует в списке покупок'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         shopping_cart, created = ShoppingCart.objects.get_or_create(
             user=user,
             recipe=shopping_cart_recipe
@@ -116,15 +111,14 @@ class RecipeViewSet(ModelViewSet):
         favorite_recipe = get_object_or_404(Recipe, id=pk)
         user = get_object_or_404(User, username=self.request.user.username)
         if request.method == 'DELETE':
-            try:
-                Favorite.objects.get(user=user, recipe=favorite_recipe)
-            except Exception as error:
-                return Response(
-                    {f'Рецепт отсутствует в избранном: {error}'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            Favorite.objects.filter(user=user, recipe=favorite_recipe).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            favorite = user.favorite.filter(recipe=favorite_recipe).first()
+            if favorite:
+                favorite.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {'Рецепт отсутствует в избранном'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         favorite, created = Favorite.objects.get_or_create(
             user=user,
             recipe=favorite_recipe

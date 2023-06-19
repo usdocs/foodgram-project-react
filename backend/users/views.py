@@ -80,14 +80,15 @@ class UserViewSet(mixins.CreateModelMixin,
         following_user = get_object_or_404(User, id=pk)
         user = get_object_or_404(User, username=self.request.user.username)
         if request.method == 'DELETE':
-            if not user.follower.filter(following=following_user).exists():
+            subscribe = user.follower.filter(following=following_user).first()
+            if subscribe:
+                subscribe.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
                 return Response(
                     {'Вы не подписаны на данного пользователя'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            else:
-                user.follower.filter(following=following_user).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
         subscribe, created = Follow.objects.get_or_create(
             user=user,
             following=following_user
@@ -110,13 +111,12 @@ class TokenViewSet(GenericViewSet):
     )
     def login(self, request):
         """Выдает токен авторизации по емейлу и паролю"""
-        if not User.objects.filter(email=request.data['email']).exists():
+        user = User.objects.filter(email=request.data['email']).first()
+        if not user:
             return Response(
                 {'Пользователя с таким email не существует'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        else:
-            user = User.objects.get(email=request.data['email'])
         if not check_password(request.data['password'], user.password):
             return Response(
                 {'Введен неверный пароль'},

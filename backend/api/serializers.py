@@ -2,6 +2,7 @@ import base64
 
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.core.validators import MaxValueValidator, MinValueValidator
 from rest_framework import serializers
 
 from recipes.models import Ingredient, Recipe, RecipeIngredient, RecipeTag, Tag
@@ -73,7 +74,12 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='ingredient.id')
-    amount = serializers.IntegerField()
+    amount = serializers.IntegerField(
+        validators=[
+            MinValueValidator(settings.MIN_VALUE),
+            MaxValueValidator(settings.MAX_VALUE)
+        ]
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -91,6 +97,12 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         many=True,
     )
     image = Base64ImageField(use_url=True)
+    cooking_time = serializers.IntegerField(
+        validators=[
+            MinValueValidator(settings.MIN_VALUE),
+            MaxValueValidator(settings.MAX_VALUE)
+        ],
+    )
 
     class Meta:
         model = Recipe
