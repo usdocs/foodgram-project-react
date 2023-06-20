@@ -3,9 +3,8 @@ import base64
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.validators import MaxValueValidator, MinValueValidator
-from rest_framework import serializers
-
 from recipes.models import Ingredient, Recipe, RecipeIngredient, RecipeTag, Tag
+from rest_framework import serializers
 from users.models import User
 from users.serializers import UserSerializer
 

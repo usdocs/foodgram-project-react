@@ -1,14 +1,13 @@
+from api.include.pagination import PageNumberLimitPagination
+from api.serializers import UserSubscribeSerializer
+from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins, status
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-
-from api.include.pagination import PageNumberLimitPagination
-from api.serializers import UserSubscribeSerializer
 from users.models import Follow, User
 from users.serializers import (TokenSerializer, UserCreateSerializer,
                                UserSerializer)
@@ -84,11 +83,10 @@ class UserViewSet(mixins.CreateModelMixin,
             if subscribe:
                 subscribe.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
-            else:
-                return Response(
-                    {'Вы не подписаны на данного пользователя'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+            return Response(
+                {'Вы не подписаны на данного пользователя'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         subscribe, created = Follow.objects.get_or_create(
             user=user,
             following=following_user

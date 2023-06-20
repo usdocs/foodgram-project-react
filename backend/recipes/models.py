@@ -1,9 +1,8 @@
-from webcolors import normalize_hex
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from webcolors import normalize_hex
 
 User = get_user_model()
 
