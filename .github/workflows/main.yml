@@ -60,6 +60,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
+        command_timeout: 200m
         script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME_BACKEND }}
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME_FRONTEND }}
