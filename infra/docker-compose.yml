@@ -9,9 +9,7 @@ services:
       - ./.env
 
   backend:
-    build:
-      context: usdocs/foodgram-project-react-backend
-      dockerfile: Dockerfile
+    image: usdocs/foodgram-project-react-backend:latest
     restart: always
     volumes:
       - data_value:/app/data/
@@ -23,9 +21,7 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: usdocs/foodgram-project-react-frontend
-      dockerfile: Dockerfile
+    image: usdocs/foodgram-project-react-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
