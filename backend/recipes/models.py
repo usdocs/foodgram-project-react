@@ -34,23 +34,17 @@ class Tag(models.Model):
     name = models.CharField(
         'Название тега',
         max_length=200,
-        # unique=True, (в тех задании указано, что поле должно быть уникально,
-        #               а в redoc, что поле не уникально)
     )
     color = models.CharField(
         'Цвет в HEX',
         max_length=7,
-        null=True,  # проверить с blank=True,
-        # unique=True, (в тех задании указано, что поле должно быть уникально,
-        #               а в redoc, что поле string or null)
+        null=True,
         validators=(normalize_hex,)
     )
     slug = models.SlugField(
         'Уникальный слаг',
         max_length=50,
         unique=True,
-        # null=True, (в тех задании указано, что поле должно быть уникально,
-        #             а в redoc, что поле string or null)
     )
 
     class Meta:
