@@ -53,16 +53,16 @@ docker-compose exec backend python manage.py import_tags_from_csv
 ```
 
 ### Тестовые пользователи
-Логин: ```admin``` (суперюзер)  
-Email: ```admin@admin.com```  
-Пароль: ```admin```  
+Логин: ```superuser``` (суперюзер)  
+Email: ```superuser@user.com```  
+Пароль: ```superuser```  
+
+Логин: ```admin``` (администратор)
+Email: ```admin@user.com```  
+Пароль: ```admin1234```  
 
 Логин: ```user```  
-Email: ```user1@user.com```  
-Пароль: ```user1234```  
-
-Логин: ```user2```  
-Email: ```user2@user.com```  
+Email: ```user@user.com```  
 Пароль: ```user1234```
 
 ### Основные адреса: 
