@@ -10,7 +10,7 @@ services:
 
   backend:
     build:
-      context: ../backend
+      context: usdocs/foodgram-project-react-backend
       dockerfile: Dockerfile
     restart: always
     volumes:
@@ -24,7 +24,7 @@ services:
 
   frontend:
     build:
-      context: ../frontend
+      context: usdocs/foodgram-project-react-frontend
       dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
